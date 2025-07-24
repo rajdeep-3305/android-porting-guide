@@ -44,7 +44,7 @@ Step-by-step walkthroughs for porting ROMs, GSIs, recoveries and debugging.
 - [Porting GSIs](guide/19-porting-gsi.md)
 - [Debugging Recovery](guide/21-debugging-recovery.md)
 - [Recovery Porting](guide/09-port-recovery.md)
-- [Guide 5: AVB/Permissive Fixes](guide/26-permission-sepolicy-fix.md)
+- [AVB/Permissive Fixes](guide/26-permission-sepolicy-fix.md)
 - More inside the folder...
 
 ---
