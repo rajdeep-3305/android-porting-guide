@@ -38,7 +38,7 @@
 
 Step-by-step walkthroughs for porting ROMs, GSIs, recoveries and debugging.
 
-📁 [`guide/`](https://github.com/rajdeep-3305/android-porting-guide/tree/4692ec5ab097ad82100122ce9bfab54aa209066c/guide)
+📁 [`guide/`](guide)
 
 - [Setup & Pre-Requisites](guide/01-what-you-need.md)
 - [Porting GSIs](guide/19-porting-gsi.md)
