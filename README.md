@@ -40,11 +40,11 @@ Step-by-step walkthroughs for porting ROMs, GSIs, recoveries and debugging.
 
 📁 [`guide/`](guide)
 
-- [Guide 1: Setup & Pre-Requisites](guide/guide1)
-- [Guide 2: Booting GSIs](guide/guide2)
-- [Guide 3: Debugging Bootloops](guide/guide3)
-- [Guide 4: Recovery Porting](guide/guide4)
-- [Guide 5: AVB/Permissive Fixes](guide/guide5)
+- [Setup & Pre-Requisites](guide/01-what-you-need)
+- [Porting GSIs](guide/19-porting-gsi)
+- [Debugging Recovery](guide/21-debugging-recovery)
+- [Recovery Porting](guide/09-port-recovery)
+- [Guide 5: AVB/Permissive Fixes](guide/26-permission-sepolicy-fix)
 - More inside the folder...
 
 ---
@@ -71,8 +71,6 @@ Advanced tips, tweaks, and undocumented quirks:
 
 📁 [`samples/`](samples)
 
-- [Redmi Note 8 Pro (MT6785)](samples/RedmiNote8Pro-MT6785)
-
 ---
 
 ## 🙋 Community Support
@@ -94,8 +92,8 @@ Want to help? Submit a fix, script, tool or a new guide!
 
 This project is also available as a GitHub Pages site:
 
-🔗 [**View Online Docs**](https://rajdeep-3305.github.io/android-porting-guide/)
+🔗 [**View Website**](https://rajdeep-3305.github.io/android-porting-guide/)
 
 ---
 
-> 🛠 Maintained with ❤️ by [rajdeep-3305](https://github.com/rajdeep-3305)
+> 🛠 Maintained with 🖤 by [Rajdeep](https://github.com/rajdeep-3305)
