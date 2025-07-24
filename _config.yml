@@ -6,7 +6,5 @@ author: Rajdeep
 
 title: Android Porting Toolkit
 description: Full guide to ROM/GSI/Recovery porting with tools and fixes
-remote_theme: mmistakes/minimal-mistakes
-plugins:
-  - jekyll-include-cache
-  - jekyll-remote-theme
+
+theme: just-the-docs
