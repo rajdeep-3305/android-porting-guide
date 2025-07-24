@@ -2,370 +2,103 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Android Porting Guide</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <meta name="description" content="Modern Android Porting Guide with responsive sidebar and 3D logo. Direct links to all guides.">
+  <title>LET'S START YOUR FIRST PORT!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    :root {
-      --accent: #45e78e;
-      --bg1: #19212e;
-      --bg2: #232e42;
-      --card: #263244cc;
-      --surface: #263148ec;
-      --on-bg: #f1fff9;
-      --side-w: 260px;
-      --side-mini: 64px;
-    }
-
-    html, body { margin:0; padding:0; min-height:100vh; background:var(--bg1);}
+    /* Minimal styling to match customromguide.github.io */
     body {
-      font-family:'Roboto',Arial,sans-serif;
-      display: flex;
-      min-height: 100vh;
-      color: var(--on-bg);
-      background: linear-gradient(120deg,#1a2230 60%,#243d46 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 15px;
+      background-color: #fff;
     }
-    .sidebar {
-      width: var(--side-w);
-      min-width: var(--side-w);
-      background: var(--bg2);
-      padding: 0;
-      box-shadow: 6px 0 22px #1530191a;
-      display: flex; flex-direction: column; align-items: center;
-      z-index: 5;
-      transition: width .22s cubic-bezier(.28,.8,.6,.97), min-width .22s;
-      position:fixed; top:0; left:0; height:100vh;
+    h2 {
+      font-size: 2em;
+      border-bottom: 2px solid #eaecef;
+      padding-bottom: .3em;
     }
-    .sidebar.closed {
-      width: var(--side-mini); min-width: var(--side-mini);
+    h3 {
+      font-size: 1.5em;
+      margin-top: 24px;
+      margin-bottom: 16px;
     }
-    .sidebar-header {
-      width: 100%;
-      text-align: center; padding: 24px 0 10px 0;
-      user-select: none;
+    h4 {
+      font-size: 1.2em;
     }
-    .android-3d-wrap {
-      display: flex; align-items: center; justify-content:center;
-      margin-bottom: 10px;
-      perspective: 540px;
+    ul, ol {
+      padding-left: 20px;
     }
-    .android-3d {
-      width: 58px; height: 62px;
-      animation: spinY 6s infinite linear;
-      transform-style: preserve-3d;
+    code {
+      padding: .2em .4em;
+      margin: 0;
+      font-size: 85%;
+      background-color: rgba(27,31,35,.05);
+      border-radius: 3px;
     }
-    @keyframes spinY {
-      from{transform: rotateY(0deg);}
-      to{transform: rotateY(360deg);}
-    }
-    .side-title {
-      font-weight: 700;
-      font-size: 1.18rem;
-      color: var(--accent);
-      margin: 6px 0 2px 0;
-      letter-spacing:.02em;
-      transition: opacity .23s;
-    }
-    .sidebar.closed .side-title { opacity: 0; pointer-events:none;}
-    .side-divider {
-      margin: 17px 27px 10px 27px; height: 1.2px; background: #44f7b522; border:0;
-    }
-    .nav-list {
-      flex:1;
-      padding: 0 0 18px 0;
-      width:100%;
-      overflow-y:auto;
-      transition: opacity .21s;
-    }
-    .nav-link {
-      display: flex; align-items: center;
-      padding: 11px 24px 11.5px 24px;
-      color:var(--on-bg);
-      font-weight: 500;
-      font-size: 1.02rem;
-      border:0; background:transparent;
-      outline: none;
-      cursor:pointer;
-      text-decoration:none;
-      border-radius:12px;
-      margin: 0 12px 3px 8px;
-      transition: background .17s, color .12s;
-    }
-    .nav-link:hover,.nav-link:focus { background: #1fe98528; color:var(--accent);}
-    .nav-num {
-      background: #243d46;
-      color: #5ef2a7; font-size: .96em; border-radius:7px; padding:2.5px 7px;
-      margin-right: 10px; font-weight:700;
-      letter-spacing:-0.5px;
-      min-width: 28px; text-align: center;
-      display: inline-block;
-    }
-    .sidebar.closed .nav-link span, .sidebar.closed .nav-link:not(:hover) .link-label {
-      display: none;
-    }
-    /* Hamburger */
-    .sidebar-toggle {
-      display: none;
-      position: fixed;
-      top: 18px; left: 18px;
-      background: var(--accent);
-      color: #102726;
-      border: none; outline: none;
-      border-radius: 12px;
-      width: 41px; height: 41px;
-      z-index: 99;
-      box-shadow: 0 2px 17px #31f9bb2a;
-      font-size: 1.8rem;
-      cursor:pointer;
-      align-items:center; justify-content: center;
-    }
-    /* Main content */
-    .main-content {
-      margin-left: var(--side-w);
-      width: 100%;
-      min-height:100vh;
-      transition: margin-left .22s cubic-bezier(.28,.8,.6,.97);
-      padding: 46px 6vw 32px 6vw;
-      box-sizing: border-box;
-      display: flex; flex-direction: column; align-items: flex-start;
-      max-width:1340px;
-    }
-    .sidebar.closed~.main-content {
-      margin-left: var(--side-mini);
-    }
-    .content-header {
-      font-weight: 800;
-      font-size: 2.0rem;
-      color: var(--accent);
-      margin-top:0;margin-bottom:9px;
-    }
-    .content-desc {
-      color: #97f1d0;
-      margin-bottom: 12px;
-      font-size: 1.15em;
-    }
-    .content-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(298px,1fr));
-      gap: 24px;
-      width:100%;
-      margin-top: 18px;
-    }
-    .guide-card {
-      background: var(--card);
-      border-radius: 17px;
-      box-shadow: 0 5px 34px #49efd326, 0 2px 14px #0fad5e17;
-      padding: 24px 22px 20px 24px;
-      color: var(--on-bg);
-      transition: box-shadow .19s,transform .17s;
-      display: flex; flex-direction: column; gap: 4px; min-width:0;
-      border: 2.2px solid transparent;
-      backdrop-filter: blur(9px);
-      -webkit-backdrop-filter: blur(9px);
-      animation: cardPop .95s cubic-bezier(.44,1.29,.66,1) backwards;
-    }
-    @keyframes cardPop {from{opacity:0;transform:scale(.96) translateY(28px);}to{opacity:1;transform:none;}}
-    .guide-card:hover,.guide-card:focus-within {
-      border: 2.2px solid var(--accent);
-      box-shadow: 0 15px 44px #1effbb23;
-      background: #223d33cc;
-      cursor: pointer;
-      color: #bafbda;
-      z-index: 4;
-    }
-    .guide-title {
-      font-size: 1.07em;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: var(--accent);
-      letter-spacing: .02em;
-      flex:0;
-    }
-    .guide-desc {
-      font-size: .99em;
-      color: #97f1d0;
-      opacity: .86;
-      flex:1;
-    }
-    .guide-link {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 600;
-      margin-top: 8px;
-      font-size: 0.98em;
-      align-self: flex-end;
-      border-radius: 7px;
-      background: #1c313654;
-      padding: 4px 14px;
-      transition: background .15s, color .12s;
-      border: none;
-      cursor: pointer;
-    }
-    .guide-link:hover {background: var(--accent); color:var(--on-accent);}
-    /* Responsive */
-    @media(max-width:900px) {
-      .main-content {padding: 27px 4vw 22px 4vw;}
-      .content-cards {grid-template-columns: 1fr;}
-    }
-    @media(max-width: 650px) {
-      :root { --side-w: 100vw;}
-      .sidebar { position: fixed; left: 0; width:100vw; min-width:100vw; height:auto; bottom:0; top:auto; flex-direction: row; padding: 3px 0;}
-      .sidebar.closed {width:0; min-width:0;}
-      .sidebar-header, .side-title, .side-divider {display:none;}
-      .sidebar .nav-list {flex-direction:row; display:flex; width:100vw; padding:0;overflow-x:auto;overflow-y:hidden;}
-      .sidebar .nav-link {padding:12px 9px; font-size:1.023em; margin:0 10px 2px 0;}
-      .main-content, .sidebar.closed~.main-content { margin-left:0;}
-      .sidebar {box-shadow:0 -8px 36px #21f7cd29;}
-    }
-    @media(max-width: 500px){
-      .main-content {padding:19px 1vw 7vw 1vw;}
-      h1{font-size:1.21rem;}
-    }
-    /* Scrollbar styling */
-    .sidebar .nav-list { scrollbar-width:thin; scrollbar-color:#7df0c9 #263148;}
-    .sidebar .nav-list::-webkit-scrollbar{height:2.5px;}
-    .sidebar .nav-list::-webkit-scrollbar-thumb{background:#44fdcb;}
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle navigation">&#9776;</button>
-  <nav class="sidebar" id="sidebar" role="navigation">
-    <div class="sidebar-header">
-      <div class="android-3d-wrap">
-        <!-- 3D effect Android SVG -->
-        <svg class="android-3d" viewBox="0 0 70 75" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Android Logo">
-          <defs>
-            <radialGradient id="body3d" cx="45%" cy="32%" r="90%" fx="70%" fy="32%" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#53ffa6"/><stop offset="0.47" stop-color="#45e78e"/><stop offset="1" stop-color="#1ea06d"/>
-            </radialGradient>
-            <radialGradient id="face3d" cx="65%" cy="25%" r="100%">
-              <stop stop-color="#fff" stop-opacity="0.25"/><stop offset="1" stop-color="#1ea06d" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
-          <!-- Body w/ 3D shading -->
-          <ellipse cx="35" cy="45" rx="28" ry="22.5" fill="url(#body3d)" filter="url(#f1)"/>
-          <!-- 3D Head -->
-          <ellipse cx="35" cy="28" rx="20" ry="14" fill="url(#body3d)"/>
-          <ellipse cx="35" cy="27" rx="20" ry="14" fill="url(#face3d)"/>
-          <!-- Eyes -->
-          <ellipse cx="28" cy="28" rx="2.6" ry="2.6" fill="#fff" />
-          <ellipse cx="42" cy="28" rx="2.6" ry="2.6" fill="#fff" />
-          <!-- Smile -->
-          <path d="M30 34 Q35 39 40 34" stroke="#fff" stroke-width="2.1" fill="none"/>
-          <!-- Antennas -->
-          <rect x="16" y="9" width="4" height="13" rx="1.9" fill="#65fff3" transform="rotate(-13 16 9)">
-            <animateTransform attributeName="transform" type="rotate" values="-13 16 9; -5 16 9; -13 16 9"
-              dur="2.1s" repeatCount="indefinite"/>
-          </rect>
-          <rect x="50" y="9" width="4" height="13" rx="1.9" fill="#65fff3" transform="rotate(13 54 9)">
-            <animateTransform attributeName="transform" type="rotate" values="13 54 9; 22 54 9; 13 54 9"
-              dur="2.1s" repeatCount="indefinite"/>
-          </rect>
-          <!-- Arms -->
-          <rect x="7" y="45.5" width="7" height="21" rx="2.44" fill="#3deb91" opacity=".86"/>
-          <rect x="56" y="45.5" width="7" height="21" rx="2.44" fill="#3deb91" opacity=".86"/>
-        </svg>
-      </div>
-      <div class="side-title">Android<br>Porting Guides</div>
-      <hr class="side-divider">
-    </div>
-    <div class="nav-list" id="navList">
-      <!-- Nav items populated by JS -->
-    </div>
-  </nav>
-  <!-- Main content -->
-  <main class="main-content">
-    <h1 class="content-header">Android Porting Guide</h1>
-    <div class="content-desc">
-      A professional, minimal, and fully responsive guide portal.<br>
-      Select a section from the sidebar or scroll the guide cards below.
-    </div>
-    <div class="content-cards" id="cardGrid">
-      <!-- Cards populated by JS -->
-    </div>
-    <footer style="width:100%;margin-top:55px;">
-      &copy; 2025 Rajdeep &middot; Based on the community Android Porting Guide. <br>
-      <a href="https://github.com/rajdeep-3305/android-porting-guide" target="_blank">GitHub Source</a>
-    </footer>
-  </main>
-  <script>
-    // 31 guide names, descriptions & URLs (edit to keep current)
-    const guides = [
-      ["What You Need","Environment, hardware & skills you’ll require.","01-what-you-need.md"],
-      ["Obtaining Device Trees","Get device, kernel, and vendor sources.","02-get-device-tree.md"],
-      ["Repo & Source Sync","Repo utility, manifest sync, source prep.","03-repo-and-sync.md"],
-      ["Cloning/Changing Trees","Download and update repos.","04-how-to-clone.md"],
-      ["Device Tree Structure","Explain folder & file layout.","05-tree-structure.md"],
-      ["Init & Boot Basics","Android boot/init process overview.","06-init-boot.md"],
-      ["Building a ROM","Lunch, envsetup, full build flow.","07-building-rom.md"],
-      ["Flashing ROMs","How to flash using recovery/Fastboot.","08-flash-roms.md"],
-      ["Port Recovery","Building and porting TWRP etc.","09-port-recovery.md"],
-      ["Recovery Features","TWRP, OrangeFox, Core features/fixes.","10-recovery-features.md"],
-      ["Recovery Compilation","End-to-end TWRP build, errors.","11-compile-recovery.md"],
-      ["Patch Boot/Reboots","Fix stuck boot, kernel panics.","12-fix-boot.md"],
-      ["Fix VNDK","VNDK layer problems & solutions.","13-fix-vndk.md"],
-      ["Kernel Compilation","Build/pick custom kernels.","14-custom-kernel.md"],
-      ["Boot.img Editing","Direct boot image patching.","15-edit-bootimg.md"],
-      ["Magisk & Mods","Root, Magisk, and related mods.","16-magisk-root.md"],
-      ["Vendor Partition","Upgrade/prep vendor partition.","17-vendor-partition.md"],
-      ["SEPolicy","SELinux fixes and policies.","18-sepolicy.md"],
-      ["GSI Porting","Portable Generic System Images.","19-porting-gsi.md"],
-      ["Treble Devices","Understanding Treble structure.","20-treble.md"],
-      ["Debugging Recovery","Collect logs, fix recovery boot.","21-debugging-recovery.md"],
-      ["System Patching","OTA, systemless or in-place patch.","22-system-patch.md"],
-      ["Bootloop Fixes","Diagnosing and fixing bootloops.","23-bootloop-fix.md"],
-      ["Logcat/Debug Tools","Using logcat, dmesg, last_kmsg.","24-logs-and-tools.md"],
-      ["Encryption","Decrypt/encrypt partitions, TWRP tips.","25-encryption.md"],
-      ["Perm/SEPolicy Fix","Permission troubles & policy edits.","26-permission-sepolicy-fix.md"],
-      ["Partition Tables","Understanding custom partitioning.","27-partition-table.md"],
-      ["Recovery-Specific Issues","Common recovery errors, device quirks.","28-recovery-issues.md"],
-      ["OTA/Updates","Building compatible updates.","29-ota-update.md"],
-      ["Advanced Tips","Power user tweaks & tricks.","30-advanced-tips.md"],
-      ["Contributing","How to contribute, open PR, join community.","31-contributing.md"]
-    ];
-    // URLs base
-    const base = "https://github.com/rajdeep-3305/android-porting-guide/blob/main/guide/";
 
-    // Populate sidebar nav
-    const navList = document.getElementById('navList');
-    guides.forEach((g, i)=>{
-      const a = document.createElement('a');
-      a.className = 'nav-link';
-      a.href = base+g[2];
-      a.target = "_blank";
-      a.innerHTML = `<span class="nav-num">${(i+1).toString().padStart(2,'0')}</span> <span class="link-label">${g[0]}</span>`;
-      navList.appendChild(a);
-    });
-    // Populate main content cards
-    const grid = document.getElementById('cardGrid');
-    guides.forEach((g, i)=>{
-      const card = document.createElement('section');
-      card.className = 'guide-card';
-      card.tabIndex = 0;
-      card.innerHTML =
-        `<div class="guide-title">${(i+1).toString().padStart(2,'0')}. ${g[0]}</div>
-         <div class="guide-desc">${g[1]}</div>
-         <a class="guide-link" href="${base+g[2]}" target="_blank">Read Guide →</a>`;
-      grid.appendChild(card);
-    });
-    // Sidebar toggle for mobile/desktop
-    const sidebar = document.getElementById('sidebar'); 
-    const btn = document.getElementById('sidebarToggle');
-    let sideOpen = window.innerWidth > 650;
-    const openSidebar = (on) =>{
-      sidebar.classList.toggle('closed',!on);
-      btn.setAttribute('aria-expanded',on);
-      btn.innerHTML = on ? '✕' : '&#9776;';
-      sideOpen = on;
-    };
-    btn.onclick = ()=>openSidebar(!sideOpen);
-    function autoToggleSidebar(){
-      openSidebar(window.innerWidth > 650);
-    }
-    window.addEventListener('resize', autoToggleSidebar);
-    autoToggleSidebar();
-  </script>
+  <h2>The Catch!!</h2>
+  <h3>There are things we need to be sure of before proceeding to port... I mean minimum requirements...</h3>
+  <p>
+    This is the bare minimum spec required. If you cannot meet these, please don't try, as it will likely lead to frustration.
+  </p>
+
+  <ul>
+    <li>A Linux Environment (Recommended: Ubuntu 20.04 LTS).</li>
+    <li>A decent Internet Connection (Better if it's a 1Mb/s plan at the least). Because sources can be very large.</li>
+    <li>CPU: 4 cores and 8 threads is the bare minimum, or else it takes an eternity to build.</li>
+    <li>RAM: 8GB Minimum (+ ZRAM + SWAP optional, but it is better to have 16GB of RAM).</li>
+    <li>Storage: An SSD is better, but an HDD will work. 250GB is a decent amount of space.</li>
+    <li>Some Linux knowledge and basic ideas about Git.</li>
+    <li>You need to have the device **TREES** (Device Tree, Kernel Tree, and Vendor Tree).</li>
+    <li>A GitHub Account (Preferably with your device trees forked/imported).</li>
+  </ul>
+
+  <p>Alright! Now we're talking. You're good to go!</p>
+
+  <hr>
+
+  <h4>Setup & Pre-Requisites</h4>
+  <p>Step 1: Just make sure you satisfy the minimum requirements and have your build environment ready!</p>
+
+  <h4>Porting GSIs</h4>
+  <p>Step 2: Learn to port a Generic System Image (GSI) as a starting point.</p>
+
+  <h4>Recovery Porting</h4>
+  <p>Step 3: Build and port a custom recovery like TWRP or OrangeFox for your device.</p>
+
+  <h4>Debugging Recovery & Bootloops</h4>
+  <p>Step 4: Understand how to read logs (logcat, dmesg) to fix issues when your device won't boot.</p>
+
+  <h4>AVB/Permissive Fixes</h4>
+  <p>Step 5: Learn to patch AVB (Android Verified Boot) and set the kernel to permissive for testing.</p>
+
+  <h4>Finalizing and Sharing</h4>
+  <p>Step 6: Clean up your work and prepare to share it with the community.</p>
+
+  <hr>
+  <p>
+    Blindly following guides without understanding the steps is not recommended. It lacks quality and you won't learn much. However, this is how we all start. Just don't make this a habit, and never release untested ports.
+  </p>
+
+  <h4>Golden Rule 1</h4>
+  <p>Never PM developers for help unless you have truly exhausted all other options. They do quality work and are better left undisturbed!</p>
+
+  <h4>Golden Rule 2</h4>
+  <p>Never ever ever build as ROOT! (At this point, you should know what this means).</p>
+
+  <h4>Golden Rule 3</h4>
+  <p>Don't be afraid to ask for help! There are many communities like the Android Porting Telegram group. Check the rules and ask for help there.</p>
+
+  <hr>
+
+  <h3>Maintained By</h3>
+  <p>Rajdeep, based on the <a href="https://github.com/rajdeep-3305/android-porting-guide" target="_blank">Android Porting Guide</a> repository.</p>
+
 </body>
 </html>
