@@ -2,7 +2,7 @@
   <img src="Androids.jpeg" width="100%" alt="Android Porting Toolkit Banner"/>
 </p>
 
-<h1 align="center">📱 Android Porting Toolkit</h1>
+<h1 align="center">📱 The ultimate Android porting guide ⚡</h1>
 
 <p align="center">
   <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=36BCF7&center=true&vCenter=true&width=500&lines=Custom+ROMs+%7C+GSIs+%7C+Recoveries+%7C+Fixes" />
