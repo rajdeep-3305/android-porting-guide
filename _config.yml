@@ -1,3 +1,2 @@
-title: Android Porting Toolkit
-theme: just-the-docs
-color_scheme: dark
+remote_theme: flancast90/millidocs-dark
+theme: millidocs-dark
