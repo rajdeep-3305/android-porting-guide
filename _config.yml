@@ -1,5 +1,8 @@
 title: Android Porting Toolkit
 remote_theme: flancast90/millidocs-dark
 description: All-in-one custom ROM & recovery porting toolkit
+
 plugins:
   - jekyll-remote-theme
+
+search: false
