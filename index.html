@@ -1,82 +1,203 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="title" content="Android Porting Guide by Rajdeep Biswas">
-  <meta name="description" content="Step-by-step guide to porting custom ROMs, recoveries, and GSIs. Includes tools, fix methods, and hands-on Android work by Rajdeep Biswas.">
-  <meta name="keywords" content="Android Porting, Custom ROM, GSI, Recovery, Redmi Note 8 Pro, Redmi Note 12 Pro, bootloop fix, avb, tools, rajdeep biswas">
-  <meta name="author" content="Rajdeep Biswas">
-  <meta name="theme-color" content="#0f172a">
-  <meta name="robots" content="index, follow">
-  <title>Android Porting Guide | Rajdeep Biswas</title>  <!-- Tailwind CSS -->  <script src="https://cdn.tailwindcss.com"></script>  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>  <script src="https://unpkg.com/@alpinejs/ui@3.x.x/dist/cdn.min.js" defer></script>  <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Android Porting Guide</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <meta name="description" content="Step-by-step guide for porting ROMs, recoveries, and GSIs.">
+  <meta name="keywords" content="custom rom porting, android gsi, recovery porting, avb fix, bootloop fix, magisk, selinux, tutorial, beginner guide, gsi porting, port guide">
+
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
+    html, body { min-height: 100%; margin:0; padding:0; box-sizing:border-box; }
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', Arial, sans-serif;
+      background: linear-gradient(120deg, #0f2027 0%, #2c5364 50%, #4ca1af 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
     }
-    .typewriter {
-      overflow: hidden;
-      white-space: nowrap;
-      border-right: .15em solid #38bdf8;
-      animation: typing 3s steps(30, end), blink .75s step-end infinite;
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      pointer-events:none; width:100vw;height:360px;
+      background: radial-gradient(circle 500px at 60% 0,#8fd8f7 0%,rgba(255,255,255,0) 100%);
     }
-    @keyframes typing {
-      from { width: 0 }
-      to { width: 100% }
+    .banner {
+      display: block; width: 100%; border-radius: 14px;
+      margin: 42px auto 0 auto; max-width: 900px; box-shadow: 0 2px 32px #1178992c;
     }
-    @keyframes blink {
-      50% { border-color: transparent }
+    main { position:relative; z-index:2; }
+    .glass {
+      background: rgba(255,255,255,0.22);
+      box-shadow: 0 8px 32px rgba(31,38,135,0.18);
+      backdrop-filter: blur(18px);
+      border-radius: 28px;
+      border: 1.5px solid rgba(255,255,255,0.28);
+      max-width: 830px;
+      margin: 32px auto 48px auto;
+      padding: 48px 44px 31px 44px;
+      animation: fadeIn 1.1s cubic-bezier(.4,0,.2,1);
+    }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #035f7d;
+      margin-bottom: 0.5em;
+      margin-top: 0;
+      text-align: center;
+      text-shadow: 0 2px 14px #afeafa42;
+      letter-spacing: -1px;
+    }
+    .subtitle {
+      font-size: 1.11rem;
+      color: #418aa5;
+      font-weight: 600;
+      margin-bottom: 1.9em;
+      text-align: center;
+    }
+    nav {
+      display: flex; flex-wrap: wrap; gap: 16px; justify-content:center; 
+      margin-bottom: 36px; margin-top: 2px;
+    }
+    nav a {
+      color: #2673aa;
+      background: rgba(255,255,255,0.31);
+      padding: 8px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.01rem;
+      box-shadow:0 2px 16px #caf7ff11;
+      transition: background .19s, color .19s;
+    }
+    nav a:hover, nav a:focus {
+      background: rgba(74,205,255,0.20);
+      color: #0f2027;
+    }
+    h2 { 
+      color: #124b61; margin-top:0; font-size: 1.29rem; font-weight: 700; 
+      background: linear-gradient(90deg, #0099f7 10%, #21c8f6 90%);
+      background-clip: text; -webkit-background-clip: text;
+      color: transparent; -webkit-text-fill-color: transparent;
+      margin-bottom: 11px;
+    }
+    ul, ol { padding-left:24px; line-height:1.62;}
+    li { margin-bottom: 6px;}
+    .section-links a {
+      color:#037db3;font-weight:600;
+      display:inline-block;margin:4px 15px 7px 0;
+      text-decoration:underline; font-size:.98em;
+    }
+    footer {
+      color: #e3f9ff;
+      text-align: center;
+      font-size: 1rem;
+      padding: 24px 8px 18px; margin-top:35px; z-index:3; position:relative;
+      text-shadow: 0 2px 10px #76e0ff22;
+    }
+    footer a {
+      color: #b1f9ff;
+      text-decoration:underline;
+      font-weight:600;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform:translateY(60px);}
+      to { opacity: 1; transform:none;}
+    }
+    @media (max-width:880px) {
+      .glass {padding: 28px 7vw 18px 7vw;}
+    }
+    @media (max-width:600px) {
+      h1 { font-size: 1.35rem;}
+      .subtitle { font-size: .99rem;}
+      nav { gap: 8px;}
+      .glass {padding: 10px 2vw 10px 2vw;}
     }
   </style>
-</head><body class="bg-slate-900 text-white">
-  <!-- Particle Background -->
-  <div id="tsparticles" class="fixed inset-0 -z-10"></div>
-  <script>
-    tsParticles.load("tsparticles", {
-      background: { color: { value: "#0f172a" } },
-      particles: {
-        color: { value: "#38bdf8" },
-        links: { enable: true, color: "#38bdf8" },
-        move: { enable: true, speed: 0.6 },
-        number: { value: 35 },
-        size: { value: 2.5 }
-      }
-    });
-  </script>  <!-- Header -->  <header class="text-center py-20 px-6">
-    <h1 class="text-4xl sm:text-5xl font-bold typewriter mb-4">Android Porting Guide</h1>
-    <p class="text-lg text-cyan-300">By Rajdeep Biswas — For enthusiasts, developers, and modders</p>
-    <div class="mt-6">
-      <select data-choose-theme class="bg-gray-700 text-white px-3 py-1 rounded">
-        <option value="dark">🌙 Dark</option>
-        <option value="light">🌞 Light</option>
-      </select>
+</head>
+<body>
+  <div class="hero-bg"></div>
+
+  <img class="banner" src="https://raw.githubusercontent.com/rajdeep-3305/android-porting-guide/main/Androids.jpeg" alt="Android Porting Toolkit Banner">
+
+  <main>
+    <div class="glass">
+      <h1>📱 The Ultimate Android Porting Guide ⚡</h1>
+      <div class="subtitle">
+        Step-by-step instructions for porting ROMs, GSIs, Recoveries, and more.<br>
+        Inspired by open source. For every Android tinkerer!
+      </div>
+      <nav>
+        <a href="#guides">Guides</a>
+        <a href="#logs">Logs</a>
+        <a href="#notes">Notes</a>
+        <a href="#samples">Sample Ports</a>
+        <a href="#community">Community</a>
+        <a href="#contributing">Contribute</a>
+      </nav>
+
+      <section id="guides">
+        <h2>📖 Guides</h2>
+        <ul>
+          <li><a href="https://github.com/rajdeep-3305/android-porting-guide/blob/main/guide/01-what-you-need.md" target="_blank">Setup & Pre-Requisites</a></li>
+          <li><a href="https://github.com/rajdeep-3305/android-porting-guide/blob/main/guide/19-porting-gsi.md" target="_blank">Porting GSIs</a></li>
+          <li><a href="https://github.com/rajdeep-3305/android-porting-guide/blob/main/guide/09-port-recovery.md" target="_blank">Recovery Porting</a></li>
+          <li><a href="https://github.com/rajdeep-3305/android-porting-guide/blob/main/guide/21-debugging-recovery.md" target="_blank">Debugging Recovery</a></li>
+          <li><a href="https://github.com/rajdeep-3305/android-porting-guide/blob/main/guide/26-permission-sepolicy-fix.md" target="_blank">AVB/Permissive Fixes</a></li>
+        </ul>
+        <div class="section-links">
+          More guides:<br>
+          <a href="https://github.com/rajdeep-3305/android-porting-guide/tree/main/guide" target="_blank">Complete Guide Index (all topics)</a>
+        </div>
+      </section>
+
+      <section id="logs">
+        <h2>🧪 Logs</h2>
+        <p>
+          Explore log flows and debugging samples:<br>
+          <a href="https://github.com/rajdeep-3305/android-porting-guide/tree/main/logs" target="_blank">Logs Folder on GitHub</a>
+        </p>
+      </section>
+
+      <section id="notes">
+        <h2>📓 Notes</h2>
+        <p>
+          Tips, undocumented tricks, and extra findings:<br>
+          <a href="https://github.com/rajdeep-3305/android-porting-guide/tree/main/notes" target="_blank">Notes Folder on GitHub</a>
+        </p>
+      </section>
+
+      <section id="samples">
+        <h2>📷 Sample Ports</h2>
+        <ul>
+          <li>Real-world Android device and ROM porting examples.</li>
+        </ul>
+        <div class="section-links">
+          <a href="https://github.com/rajdeep-3305/android-porting-guide/tree/main/samples" target="_blank">Sample Ports on GitHub</a>
+        </div>
+      </section>
+
+      <section id="community">
+        <h2>🙋 Community Support</h2>
+        <ul>
+          <li>Visit the <a href="https://t.me/android_porting" target="_blank">Android Porting Telegram</a> group for Q&amp;A.</li>
+          <li>Ask questions, share logs, and report bugs via <a href="https://github.com/rajdeep-3305/android-porting-guide/issues" target="_blank">GitHub Issues</a>.</li>
+        </ul>
+      </section>
+
+      <section id="contributing">
+        <h2>🤝 Contributing</h2>
+        <ul>
+          <li>Your contributions make the guide better for everyone.</li>
+          <li>See <a href="https://github.com/rajdeep-3305/android-porting-guide/blob/main/.github/CONTRIBUTING.md" target="_blank">How to Contribute</a> on GitHub.</li>
+        </ul>
+      </section>
     </div>
-  </header>  <!-- Sidebar Navigation -->  <aside class="max-w-6xl mx-auto px-4 mb-10">
-    <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-      <!-- 31 Guides -->
-      <!-- Example only for first few -->
-      <a href="./guide/01-what-you-need.md.md" class="bg-gray-800 hover:bg-gray-700 p-3 rounded text-center">Guide 1</a>
-      <a href="./guide/02-identify-your-device.md.md" class="bg-gray-800 hover:bg-gray-700 p-3 rounded text-center">Guide 2</a>
-      <a href="./guide/03-flashing-custom-images.md.md" class="bg-gray-800 hover:bg-gray-700 p-3 rounded text-center">Guide 3</a>
-      <a href="./guide/04-unpack-super.md.md" class="bg-gray-800 hover:bg-gray-700 p-3 rounded text-center">Guide 4</a>
-      <!-- ... up to Guide 31 ... -->
-      <a href="./guide/31-mount-edit-img.md.md" class="bg-gray-800 hover:bg-gray-700 p-3 rounded text-center">Guide 31</a>
-    </div>
-  </aside>  <!-- Quick Links -->  <section class="max-w-5xl mx-auto px-6 pb-16">
-    <h2 class="text-2xl text-cyan-400 font-semibold mb-4">🚀 Quick Links</h2>
-    <div class="grid gap-6 sm:grid-cols-2">
-      <a href="./guides/" class="block bg-gray-800 hover:bg-gray-700 p-5 rounded shadow">
-        <h3 class="text-xl font-bold mb-2">📖 All Guides</h3>
-        <p>Follow the structured documentation recreated from the PDF.</p>
-      </a>
-      <a href="./tools/" class="block bg-gray-800 hover:bg-gray-700 p-5 rounded shadow">
-        <h3 class="text-xl font-bold mb-2">🛠 Tools Section</h3>
-        <p>Debug scripts, flash tools, and recovery binaries all in one place.</p>
-      </a>
-    </div>
-  </section>  <!-- Footer -->  <footer class="text-center py-6 text-sm text-gray-400">
-    <p>Built with ❤️ by <a href="https://github.com/rajdeep-3305" class="text-cyan-300 hover:underline">Rajdeep Biswas</a></p>
-    <p>Powered by Tailwind CSS + GitHub Pages · &copy; 2025</p>
+  </main>
+
+  <footer>
+    &copy; 2025 Rajdeep · Based on the community Android Porting Guide.<br>
+    Not affiliated with Google or Android Open Source Project.<br>
+    <a href="https://github.com/rajdeep-3305/android-porting-guide" target="_blank">GitHub Source</a>
   </footer>
-</body></html>
+</body>
+</html>
