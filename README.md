@@ -40,11 +40,11 @@ Step-by-step walkthroughs for porting ROMs, GSIs, recoveries and debugging.
 
 📁 [`guide/`](guide)
 
-- [Setup & Pre-Requisites](guide/01-what-you-need)
-- [Porting GSIs](guide/19-porting-gsi)
-- [Debugging Recovery](guide/21-debugging-recovery)
-- [Recovery Porting](guide/09-port-recovery)
-- [Guide 5: AVB/Permissive Fixes](guide/26-permission-sepolicy-fix)
+- [Setup & Pre-Requisites](guide/01-what-you-need.md)
+- [Porting GSIs](guide/19-porting-gsi.md)
+- [Debugging Recovery](guide/21-debugging-recovery.md)
+- [Recovery Porting](guide/09-port-recovery.md)
+- [Guide 5: AVB/Permissive Fixes](guide/26-permission-sepolicy-fix.md)
 - More inside the folder...
 
 ---
