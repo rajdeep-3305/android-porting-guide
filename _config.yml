@@ -1,3 +1,9 @@
+# SEO
+title: Android Porting Toolkit
+description: Guide for porting custom ROMs, GSIs, Recoveries, and fixes for Android devices.
+url: "https://rajdeep-3305.github.io/android-porting-guide"
+author: Rajdeep
+
 title: Android Porting Toolkit
 remote_theme: flancast90/millidocs-dark
 description: All-in-one custom ROM & recovery porting toolkit
