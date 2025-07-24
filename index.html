@@ -1,0 +1,82 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="title" content="Android Porting Guide by Rajdeep Biswas">
+  <meta name="description" content="Step-by-step guide to porting custom ROMs, recoveries, and GSIs. Includes tools, fix methods, and hands-on Android work by Rajdeep Biswas.">
+  <meta name="keywords" content="Android Porting, Custom ROM, GSI, Recovery, Redmi Note 8 Pro, Redmi Note 12 Pro, bootloop fix, avb, tools, rajdeep biswas">
+  <meta name="author" content="Rajdeep Biswas">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="robots" content="index, follow">
+  <title>Android Porting Guide | Rajdeep Biswas</title>  <!-- Tailwind CSS -->  <script src="https://cdn.tailwindcss.com"></script>  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>  <script src="https://unpkg.com/@alpinejs/ui@3.x.x/dist/cdn.min.js" defer></script>  <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .typewriter {
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: .15em solid #38bdf8;
+      animation: typing 3s steps(30, end), blink .75s step-end infinite;
+    }
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+    @keyframes blink {
+      50% { border-color: transparent }
+    }
+  </style>
+</head><body class="bg-slate-900 text-white">
+  <!-- Particle Background -->
+  <div id="tsparticles" class="fixed inset-0 -z-10"></div>
+  <script>
+    tsParticles.load("tsparticles", {
+      background: { color: { value: "#0f172a" } },
+      particles: {
+        color: { value: "#38bdf8" },
+        links: { enable: true, color: "#38bdf8" },
+        move: { enable: true, speed: 0.6 },
+        number: { value: 35 },
+        size: { value: 2.5 }
+      }
+    });
+  </script>  <!-- Header -->  <header class="text-center py-20 px-6">
+    <h1 class="text-4xl sm:text-5xl font-bold typewriter mb-4">Android Porting Guide</h1>
+    <p class="text-lg text-cyan-300">By Rajdeep Biswas — For enthusiasts, developers, and modders</p>
+    <div class="mt-6">
+      <select data-choose-theme class="bg-gray-700 text-white px-3 py-1 rounded">
+        <option value="dark">🌙 Dark</option>
+        <option value="light">🌞 Light</option>
+      </select>
+    </div>
+  </header>  <!-- Sidebar Navigation -->  <aside class="max-w-6xl mx-auto px-4 mb-10">
+    <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+      <!-- 31 Guides -->
+      <!-- Example only for first few -->
+      <a href="./guide/01-what-you-need.md.md" class="bg-gray-800 hover:bg-gray-700 p-3 rounded text-center">Guide 1</a>
+      <a href="./guide/02-identify-your-device.md.md" class="bg-gray-800 hover:bg-gray-700 p-3 rounded text-center">Guide 2</a>
+      <a href="./guide/03-flashing-custom-images.md.md" class="bg-gray-800 hover:bg-gray-700 p-3 rounded text-center">Guide 3</a>
+      <a href="./guide/04-unpack-super.md.md" class="bg-gray-800 hover:bg-gray-700 p-3 rounded text-center">Guide 4</a>
+      <!-- ... up to Guide 31 ... -->
+      <a href="./guide/31-mount-edit-img.md.md" class="bg-gray-800 hover:bg-gray-700 p-3 rounded text-center">Guide 31</a>
+    </div>
+  </aside>  <!-- Quick Links -->  <section class="max-w-5xl mx-auto px-6 pb-16">
+    <h2 class="text-2xl text-cyan-400 font-semibold mb-4">🚀 Quick Links</h2>
+    <div class="grid gap-6 sm:grid-cols-2">
+      <a href="./guides/" class="block bg-gray-800 hover:bg-gray-700 p-5 rounded shadow">
+        <h3 class="text-xl font-bold mb-2">📖 All Guides</h3>
+        <p>Follow the structured documentation recreated from the PDF.</p>
+      </a>
+      <a href="./tools/" class="block bg-gray-800 hover:bg-gray-700 p-5 rounded shadow">
+        <h3 class="text-xl font-bold mb-2">🛠 Tools Section</h3>
+        <p>Debug scripts, flash tools, and recovery binaries all in one place.</p>
+      </a>
+    </div>
+  </section>  <!-- Footer -->  <footer class="text-center py-6 text-sm text-gray-400">
+    <p>Built with ❤️ by <a href="https://github.com/rajdeep-3305" class="text-cyan-300 hover:underline">Rajdeep Biswas</a></p>
+    <p>Powered by Tailwind CSS + GitHub Pages · &copy; 2025</p>
+  </footer>
+</body></html>
