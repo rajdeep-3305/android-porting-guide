@@ -1,0 +1,3 @@
+GSI: TD-S GSI - AOSP 15 Beta (2024-06)
+Variant: treble_arm64_bvN
+Source: https://github.com/tds-gsi
