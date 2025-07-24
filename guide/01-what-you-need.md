@@ -1,37 +1,39 @@
 # 🧰 What You Need
 
-To start porting custom ROMs or recoveries, make sure your system has the following tools installed:
+Before you begin porting a custom ROM or recovery, you need to prepare your system with the required tools.
 
 ---
 
 ## 📦 Required Tools
 
-- **CRB Kitchen** – main tool for unpacking/repacking images  
-  👉 [Download](https://forum.xda-developers.com/t/kitchen-windows-tool-crb-v3-2-5.3947779/)
+- **CRB Kitchen** – main tool for unpacking and repacking images  
+  👉 [Download CRB Kitchen](https://forum.xda-developers.com/t/kitchen-windows-tool-crb-v3-2-5.3947779/)
 
-- **Windows 10/11** (with **WSL2** installed)
-
-- **Linux (Fedora/Arch)** – for F2FS unpacking (or donate to unlock CRB full features)
-
-- **Android Image Kitchen** – to unpack boot/recovery images  
+- **Android Image Kitchen (AIK)** – unpack boot/recovery images  
   👉 [AIK GitHub](https://github.com/osm0sis/AIK-Linux)
 
-- **7Zip ZS** – extract `.img`, `.lz4`, `.cpio.gz`
+- **7Zip ZS** – extract `.img`, `.lz4`, `.cpio.gz` files
 
-- **Notepad++** or XML/PROP editor – edit `build.prop`, `.xml`, `.rc` scripts
+- **simg2img.exe** – convert sparse `.img` to raw
 
-- **WinMerge** – to compare files (e.g., `init.rc`, `fstab`)
+- **MixPlorer (Android app)** – inspect partitions on rooted phones
 
-- **MixPlorer (Android app)** – inspect partitions/filesystem from a rooted phone
+- **Notepad++** or any XML/PROP editor – edit config files like `build.prop`, `fstab`, etc.
+
+- **WinMerge** – compare and patch `.rc`, `.xml`, and vendor files
 
 ---
 
 ## 🖥️ System Requirements
 
-- **8GB RAM minimum**
-- Fast storage (SSD recommended)
-- Internet connection (to download tools and source trees)
+| Requirement     | Minimum          |
+|-----------------|------------------|
+| RAM             | 8GB+             |
+| OS              | Windows 10/11 OR Linux |
+| Disk Space      | 20GB+            |
+| Linux Distro    | Fedora or Arch (for F2FS unpacking) |
+| Internet        | Required (to download ROMs, tools, sources) |
 
 ---
 
-> ⚠️ Note: Some OEMs like Samsung, Huawei, etc. require extra tools or modes (like `fastbootd`, `MTKClient`, or testpoints).
+> ⚠️ Some tools like CRB require WSL2 (for Windows) or Linux natively for advanced features like unpacking F2FS/EROFS.
