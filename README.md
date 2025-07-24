@@ -1,6 +1,8 @@
 <p align="center">
   <img src="Androids.jpeg" width="100%" alt="Android Porting Toolkit Banner"/>
 </p>
+<meta name="keywords" content="custom rom porting, android gsi, recovery porting, avb fix, bootloop fix, magisk, selinux, redmi note 8 pro, redmi note 12 pro, port, porting, porting oxygen os, porting roms, tutorial, hoe to port roms, beginner guide to port roms, gsi porting, step by step port guide">
+<meta name="description" content="Step-by-step guide for porting ROMs, recoveries, and GSIs.">
 
 <h1 align="center">📱 The ultimate Android porting guide ⚡</h1>
 
