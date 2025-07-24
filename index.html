@@ -4,389 +4,368 @@
   <meta charset="UTF-8">
   <title>Android Porting Guide</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Android Porting Guide – Minimal dark Material UI, animated SVG, color adaptation.">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <meta name="description" content="Modern Android Porting Guide with responsive sidebar and 3D logo. Direct links to all guides.">
   <style>
     :root {
-      --accent: #00ffa3;
-      --surface-d: #191d27;
-      --surface-s: #262938;
-      --surface-v: #263f31;
-      --surface-t: #233768a0;
-      --card-blur: 22px;
-      --card-radius: 23px;
-      --card-gap: 28px;
-      --card-pad-v: 34px;
-      --card-pad-h: 22px;
-      --on-surface: #ecfcf7;
-      --on-accent: #111e15;
+      --accent: #45e78e;
+      --bg1: #19212e;
+      --bg2: #232e42;
+      --card: #263244cc;
+      --surface: #263148ec;
+      --on-bg: #f1fff9;
+      --side-w: 260px;
+      --side-mini: 64px;
     }
-    [data-accent="indigo"] { --accent: #59aaff; }
-    [data-accent="violet"] { --accent: #b971ff; }
-    [data-accent="orange"] { --accent: #ffb94b; }
-    [data-accent="red"] { --accent: #ff5671; }
-    [data-accent="teal"] { --accent: #00ffd4; }
-    html, body {
+
+    html, body { margin:0; padding:0; min-height:100vh; background:var(--bg1);}
+    body {
+      font-family:'Roboto',Arial,sans-serif;
+      display: flex;
       min-height: 100vh;
-      background: linear-gradient(124deg, #151622 0%, #211d2c 66%, #183037 100%);
-      margin: 0; padding: 0;
-      color: var(--on-surface);
-      font-family: 'Roboto', system-ui, sans-serif;
-      scrollbar-color: var(--accent) var(--surface-t);
-      user-select: text;
-      transition: background 0.31s;
+      color: var(--on-bg);
+      background: linear-gradient(120deg,#1a2230 60%,#243d46 100%);
     }
-    .hero-bg {
-      position: Fixed;
-      z-index:0; pointer-events:none;
-      top:0; left:0; width:100vw; height:100vh;
-      background:radial-gradient(ellipse 36vw 26vw at 95% 17%,#00ffb73c 9%,#12131e00 81%),
-        radial-gradient(ellipse 19vw 43vw at 0% 100%,#00ffd87a 8%,#16253200 81%);
-      filter: blur(3px);
-      animation: bgfade 4s ease-in;
+    .sidebar {
+      width: var(--side-w);
+      min-width: var(--side-w);
+      background: var(--bg2);
+      padding: 0;
+      box-shadow: 6px 0 22px #1530191a;
+      display: flex; flex-direction: column; align-items: center;
+      z-index: 5;
+      transition: width .22s cubic-bezier(.28,.8,.6,.97), min-width .22s;
+      position:fixed; top:0; left:0; height:100vh;
     }
-    @keyframes bgfade { from{opacity:.1;} to{opacity:1;} }
-    .container {
-      max-width: 950px;
-      margin: 0 auto;
-      padding: 60px 10px 70px 10px;
-      position: relative;
-      z-index: 2;
-      display: flex; flex-direction: column; gap: var(--card-gap);
-      animation: fadeIn 1.08s cubic-bezier(.23,.93,.42,1.01);
+    .sidebar.closed {
+      width: var(--side-mini); min-width: var(--side-mini);
     }
-    @keyframes fadeIn {
-      from {opacity:0;transform:translateY(60px);}
-      to {opacity:1;transform:none;}
+    .sidebar-header {
+      width: 100%;
+      text-align: center; padding: 24px 0 10px 0;
+      user-select: none;
     }
-    header {
-      text-align: center;
-      margin-bottom: 19px;
-      position: relative;
+    .android-3d-wrap {
+      display: flex; align-items: center; justify-content:center;
+      margin-bottom: 10px;
+      perspective: 540px;
     }
-    .color-bar {
-      margin-bottom: 14px;
-      display:flex; justify-content:center; gap: 7px;
+    .android-3d {
+      width: 58px; height: 62px;
+      animation: spinY 6s infinite linear;
+      transform-style: preserve-3d;
     }
-    .bar-color {
-      display:inline-block;width:20px;height:20px; border-radius:12px;
-      cursor:pointer;border:2px solid transparent; transition: border .26s;
-      box-shadow:0 1px 9px #0002;
+    @keyframes spinY {
+      from{transform: rotateY(0deg);}
+      to{transform: rotateY(360deg);}
     }
-    .bar-color[data-name="teal"]{background:#00ffa3;}
-    .bar-color[data-name="indigo"]{background:#59aaff;}
-    .bar-color[data-name="violet"]{background:#b971ff;}
-    .bar-color[data-name="orange"]{background:#ffb94b;}
-    .bar-color[data-name="red"]{background:#ff5671;}
-    .active-color { border: 2px solid var(--accent); }
-    .logo-box {
-      width:67px; height:67px; display:flex; align-items:center; justify-content:center;
-      margin: 0 auto 0.5em auto; position: relative;
-      background: linear-gradient(135deg,var(--accent) 40%,#1f232a 100%);
-      border-radius: 32px;
-      box-shadow: 0 9px 44px #1affccee, 0 2px 25px #088d6736;
-      animation: popUp 1s cubic-bezier(.44,1.17,.75,1.19) .1s backwards;
-    }
-    @keyframes popUp { from { transform:scale(.76);opacity:.1;} to{transform:scale(1);opacity:1;} }
-    .logo-box svg { width:46px; height:58px; display:block; }
-    h1 {
-      margin: 4px 0 3px 0;
-      font-size: 2.1rem;
+    .side-title {
       font-weight: 700;
-      letter-spacing: -0.9px;
-      color: var(--on-surface);
-      line-height: 1.42;
-    }
-    .subtitle {
-      color: #07deb5;
-      font-size: 1.12rem;
-      opacity: .87;
-      margin-bottom: 2px;
-    }
-    nav {
-      display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:14px 0 21px 0;
-    }
-    nav a {
+      font-size: 1.18rem;
       color: var(--accent);
-      font-size:1.01em;
-      background:rgba(0,255,204,0.10);
-      padding: 8px 20px;
-      border-radius: 10px;
-      font-weight: 700;
-      text-decoration: none;
-      border: 1.2px solid #054f4348;
-      letter-spacing: .07em;
-      transition: background .18s, color .19s;
+      margin: 6px 0 2px 0;
+      letter-spacing:.02em;
+      transition: opacity .23s;
     }
-    nav a:hover, nav a:focus {
-      background: rgba(0,255,163,0.20);
-      color: #222;
+    .sidebar.closed .side-title { opacity: 0; pointer-events:none;}
+    .side-divider {
+      margin: 17px 27px 10px 27px; height: 1.2px; background: #44f7b522; border:0;
     }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(288px, 1fr));
-      gap: var(--card-gap);
+    .nav-list {
+      flex:1;
+      padding: 0 0 18px 0;
+      width:100%;
+      overflow-y:auto;
+      transition: opacity .21s;
     }
-    .card {
-      background: linear-gradient(120deg,var(--surface-d) 70%,var(--surface-s) 100%);
-      border-radius: var(--card-radius);
-      box-shadow: 0 12px 44px #07dacb1a, 0 2px 15px #093a4f63;
-      padding: var(--card-pad-v) var(--card-pad-h) 26px var(--card-pad-h);
-      display: flex; flex-direction: column;
-      min-width: 0;
-      position: relative;
-      transition: 
-        box-shadow .25s, 
-        transform .19s cubic-bezier(.33,1.14,.64,1.17),
-        background .22s;
-      backdrop-filter: blur(var(--card-blur));
-      -webkit-backdrop-filter: blur(var(--card-blur));
+    .nav-link {
+      display: flex; align-items: center;
+      padding: 11px 24px 11.5px 24px;
+      color:var(--on-bg);
+      font-weight: 500;
+      font-size: 1.02rem;
+      border:0; background:transparent;
       outline: none;
-      animation: cardFadeIn .95s cubic-bezier(.48,1.37,.63,.99);
+      cursor:pointer;
+      text-decoration:none;
+      border-radius:12px;
+      margin: 0 12px 3px 8px;
+      transition: background .17s, color .12s;
     }
-    @keyframes cardFadeIn {
-      from { opacity:0; transform: scale(.96) translateY(36px);}
-      to { opacity:1; transform: none;}
+    .nav-link:hover,.nav-link:focus { background: #1fe98528; color:var(--accent);}
+    .nav-num {
+      background: #243d46;
+      color: #5ef2a7; font-size: .96em; border-radius:7px; padding:2.5px 7px;
+      margin-right: 10px; font-weight:700;
+      letter-spacing:-0.5px;
+      min-width: 28px; text-align: center;
+      display: inline-block;
     }
-    .card:hover, .card:focus-within {
-      box-shadow: 0 18px 46px #0cdcaf2a, 0 4px 21px #138cae27;
-      background: linear-gradient(122deg, #193f2e 60%, #1f3150 110%);
-      transform: translateY(-8px) scale(1.018) rotateZ(-.9deg);
+    .sidebar.closed .nav-link span, .sidebar.closed .nav-link:not(:hover) .link-label {
+      display: none;
+    }
+    /* Hamburger */
+    .sidebar-toggle {
+      display: none;
+      position: fixed;
+      top: 18px; left: 18px;
+      background: var(--accent);
+      color: #102726;
+      border: none; outline: none;
+      border-radius: 12px;
+      width: 41px; height: 41px;
+      z-index: 99;
+      box-shadow: 0 2px 17px #31f9bb2a;
+      font-size: 1.8rem;
+      cursor:pointer;
+      align-items:center; justify-content: center;
+    }
+    /* Main content */
+    .main-content {
+      margin-left: var(--side-w);
+      width: 100%;
+      min-height:100vh;
+      transition: margin-left .22s cubic-bezier(.28,.8,.6,.97);
+      padding: 46px 6vw 32px 6vw;
+      box-sizing: border-box;
+      display: flex; flex-direction: column; align-items: flex-start;
+      max-width:1340px;
+    }
+    .sidebar.closed~.main-content {
+      margin-left: var(--side-mini);
+    }
+    .content-header {
+      font-weight: 800;
+      font-size: 2.0rem;
+      color: var(--accent);
+      margin-top:0;margin-bottom:9px;
+    }
+    .content-desc {
+      color: #97f1d0;
+      margin-bottom: 12px;
+      font-size: 1.15em;
+    }
+    .content-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(298px,1fr));
+      gap: 24px;
+      width:100%;
+      margin-top: 18px;
+    }
+    .guide-card {
+      background: var(--card);
+      border-radius: 17px;
+      box-shadow: 0 5px 34px #49efd326, 0 2px 14px #0fad5e17;
+      padding: 24px 22px 20px 24px;
+      color: var(--on-bg);
+      transition: box-shadow .19s,transform .17s;
+      display: flex; flex-direction: column; gap: 4px; min-width:0;
+      border: 2.2px solid transparent;
+      backdrop-filter: blur(9px);
+      -webkit-backdrop-filter: blur(9px);
+      animation: cardPop .95s cubic-bezier(.44,1.29,.66,1) backwards;
+    }
+    @keyframes cardPop {from{opacity:0;transform:scale(.96) translateY(28px);}to{opacity:1;transform:none;}}
+    .guide-card:hover,.guide-card:focus-within {
+      border: 2.2px solid var(--accent);
+      box-shadow: 0 15px 44px #1effbb23;
+      background: #223d33cc;
+      cursor: pointer;
+      color: #bafbda;
+      z-index: 4;
+    }
+    .guide-title {
+      font-size: 1.07em;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--accent);
+      letter-spacing: .02em;
+      flex:0;
+    }
+    .guide-desc {
+      font-size: .99em;
+      color: #97f1d0;
+      opacity: .86;
+      flex:1;
+    }
+    .guide-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 8px;
+      font-size: 0.98em;
+      align-self: flex-end;
+      border-radius: 7px;
+      background: #1c313654;
+      padding: 4px 14px;
+      transition: background .15s, color .12s;
+      border: none;
       cursor: pointer;
     }
-    .card h2 {
-      font-size: 1.14rem;
-      font-weight: 700;
-      margin: 0 0 0.6em 0;
-      color: var(--accent);
-      letter-spacing: -.3px;
+    .guide-link:hover {background: var(--accent); color:var(--on-accent);}
+    /* Responsive */
+    @media(max-width:900px) {
+      .main-content {padding: 27px 4vw 22px 4vw;}
+      .content-cards {grid-template-columns: 1fr;}
     }
-    .card ul, .card ol { margin:0 0 .4em 0; padding-left: 20px;}
-    .card li { margin-bottom: .19em;}
-    .card a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 500;
-      border-radius: 4px;
-      padding: 3px 6px 2px 4px;
-      transition: background .15s;
+    @media(max-width: 650px) {
+      :root { --side-w: 100vw;}
+      .sidebar { position: fixed; left: 0; width:100vw; min-width:100vw; height:auto; bottom:0; top:auto; flex-direction: row; padding: 3px 0;}
+      .sidebar.closed {width:0; min-width:0;}
+      .sidebar-header, .side-title, .side-divider {display:none;}
+      .sidebar .nav-list {flex-direction:row; display:flex; width:100vw; padding:0;overflow-x:auto;overflow-y:hidden;}
+      .sidebar .nav-link {padding:12px 9px; font-size:1.023em; margin:0 10px 2px 0;}
+      .main-content, .sidebar.closed~.main-content { margin-left:0;}
+      .sidebar {box-shadow:0 -8px 36px #21f7cd29;}
     }
-    .card a:hover,.card a:focus {
-      background: #00ffb752;
-      color: #0b3240;
+    @media(max-width: 500px){
+      .main-content {padding:19px 1vw 7vw 1vw;}
+      h1{font-size:1.21rem;}
     }
-    .chips {
-      display: flex; flex-wrap: wrap; gap:6px; margin:7px 0 0 0;
-    }
-    .chip {
-      background: #00ffa31d;
-      color: #2bedb2;
-      font-size: .92em;
-      border-radius: 8px;
-      padding: 2.7px 11px 2.7px 10px;
-      font-weight: 700;
-      letter-spacing: .1px;
-      margin-top: 2px;
-    }
-    .external { font-size: 0.99em; opacity: .73; margin-left: 3px;}
-    footer {
-      text-align: center;
-      margin: 48px auto 18px auto;
-      color: #60ffc1a9;
-      font-size: .97em;
-      opacity:.94;
-      z-index: 3; position: relative; letter-spacing:0;
-    }
-    footer a { color: var(--accent); font-weight:600; text-decoration:underline; }
-    @media (max-width: 700px) {
-      .container {padding:19px 2vw 30px 2vw;}
-      .cards {grid-template-columns:1fr;}
-      h1 {font-size:1.18rem;}
-      .logo-box{width:41px;height:41px;}
-    }
-    /* SVG Antenna Animation */
-    .antenna-l,.antenna-r {
-      transform-origin:center bottom;
-      animation: antwigg 1.68s infinite alternate cubic-bezier(.4,.73,.8,1.1);
-    }
-    .antenna-r { animation-delay: .7s; }
-    @keyframes antwigg {
-      0% { transform:rotate(-9deg);}
-      60% { transform:rotate(10deg);}
-      100% { transform:rotate(-9deg);}
-    }
-    .android-body {
-      filter: drop-shadow(0 3px 16px #00ffa77b);
-      transition:filter .2s;
-    }
-    .logo-box:hover .android-body { filter: drop-shadow(0 8px 24px var(--accent)) brightness(1.1);}
+    /* Scrollbar styling */
+    .sidebar .nav-list { scrollbar-width:thin; scrollbar-color:#7df0c9 #263148;}
+    .sidebar .nav-list::-webkit-scrollbar{height:2.5px;}
+    .sidebar .nav-list::-webkit-scrollbar-thumb{background:#44fdcb;}
   </style>
-  <script>
-    // Accent color switcher
-    document.addEventListener('DOMContentLoaded',()=>{
-      const root=document.documentElement, colors=['teal','indigo','violet','orange','red'];
-      const switchAccent=n=>{
-        root.setAttribute('data-accent',n);
-        for(const el of document.querySelectorAll('.bar-color')) 
-          el.classList.toggle('active-color',el.dataset.name===n);
-        localStorage.setItem('accent',n);
-      };
-      let col=localStorage.getItem('accent')||'teal';
-      switchAccent(col);
-      document.querySelectorAll('.bar-color').forEach(e=>e.onclick=()=>switchAccent(e.dataset.name));
-    });
-  </script>
 </head>
 <body>
-  <div class="hero-bg"></div>
-  <div class="container">
-    <header>
-      <div class="color-bar" aria-label="Change accent color">
-        <span class="bar-color" data-name="teal" title="Teal"></span>
-        <span class="bar-color" data-name="indigo" title="Indigo"></span>
-        <span class="bar-color" data-name="violet" title="Violet"></span>
-        <span class="bar-color" data-name="orange" title="Orange"></span>
-        <span class="bar-color" data-name="red" title="Red"></span>
-      </div>
-      <div class="logo-box">
-        <!-- Animated Android SVG logo -->
-        <svg viewBox="0 0 56 68" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Android Logo">
-          <!-- Antennas -->
-          <rect class="antenna-l" x="10" y="5" width="4" height="17" rx="2" fill="#00ffc1" />
-          <rect class="antenna-r" x="42" y="5" width="4" height="17" rx="2" fill="#00ffc1" />
-          <!-- Head -->
-          <ellipse class="android-body" cx="28" cy="25" rx="21" ry="15" fill="url(#botg1)" stroke="#00ffa3" stroke-width="2.2"/>
-          <!-- Eyes -->
-          <ellipse cx="20" cy="25" rx="2.1" ry="2.1" fill="#fff"/>
-          <ellipse cx="36" cy="25" rx="2.1" ry="2.1" fill="#fff"/>
-          <!-- Smile -->
-          <path d="M22 31 Q28 36 34 31" stroke="#fff" stroke-width="2" fill="none"/>
-          <!-- Body -->
-          <ellipse class="android-body" cx="28" cy="45" rx="20" ry="12" fill="url(#botg2)" stroke="#00ffa3" stroke-width="1.5"/>
-          <!-- Arms -->
-          <rect x="6" y="42" width="6" height="15.5" rx="2.4" fill="#00ffc1" opacity=".82"/>
-          <rect x="44" y="42" width="6" height="15.5" rx="2.4" fill="#00ffc1" opacity=".82"/>
+  <!-- Sidebar -->
+  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle navigation">&#9776;</button>
+  <nav class="sidebar" id="sidebar" role="navigation">
+    <div class="sidebar-header">
+      <div class="android-3d-wrap">
+        <!-- 3D effect Android SVG -->
+        <svg class="android-3d" viewBox="0 0 70 75" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Android Logo">
           <defs>
-            <linearGradient id="botg1" x1="7" y1="13" x2="50" y2="43" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#00ffc1"/><stop offset="1" stop-color="#173b2f"/>
-            </linearGradient>
-            <linearGradient id="botg2" x1="7" y1="32" x2="50" y2="60" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#00ffe1"/><stop offset="1" stop-color="#14315e"/>
-            </linearGradient>
+            <radialGradient id="body3d" cx="45%" cy="32%" r="90%" fx="70%" fy="32%" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#53ffa6"/><stop offset="0.47" stop-color="#45e78e"/><stop offset="1" stop-color="#1ea06d"/>
+            </radialGradient>
+            <radialGradient id="face3d" cx="65%" cy="25%" r="100%">
+              <stop stop-color="#fff" stop-opacity="0.25"/><stop offset="1" stop-color="#1ea06d" stop-opacity="0"/>
+            </radialGradient>
           </defs>
+          <!-- Body w/ 3D shading -->
+          <ellipse cx="35" cy="45" rx="28" ry="22.5" fill="url(#body3d)" filter="url(#f1)"/>
+          <!-- 3D Head -->
+          <ellipse cx="35" cy="28" rx="20" ry="14" fill="url(#body3d)"/>
+          <ellipse cx="35" cy="27" rx="20" ry="14" fill="url(#face3d)"/>
+          <!-- Eyes -->
+          <ellipse cx="28" cy="28" rx="2.6" ry="2.6" fill="#fff" />
+          <ellipse cx="42" cy="28" rx="2.6" ry="2.6" fill="#fff" />
+          <!-- Smile -->
+          <path d="M30 34 Q35 39 40 34" stroke="#fff" stroke-width="2.1" fill="none"/>
+          <!-- Antennas -->
+          <rect x="16" y="9" width="4" height="13" rx="1.9" fill="#65fff3" transform="rotate(-13 16 9)">
+            <animateTransform attributeName="transform" type="rotate" values="-13 16 9; -5 16 9; -13 16 9"
+              dur="2.1s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="50" y="9" width="4" height="13" rx="1.9" fill="#65fff3" transform="rotate(13 54 9)">
+            <animateTransform attributeName="transform" type="rotate" values="13 54 9; 22 54 9; 13 54 9"
+              dur="2.1s" repeatCount="indefinite"/>
+          </rect>
+          <!-- Arms -->
+          <rect x="7" y="45.5" width="7" height="21" rx="2.44" fill="#3deb91" opacity=".86"/>
+          <rect x="56" y="45.5" width="7" height="21" rx="2.44" fill="#3deb91" opacity=".86"/>
         </svg>
       </div>
-      <h1>Android Porting Guide</h1>
-      <div class="subtitle">
-        Dark Material cards · Animated SVG · Blur, adaptable accent, and ultra-responsive
-      </div>
-      <nav>
-        <a href="#setup">Setup</a>
-        <a href="#gsi">GSI</a>
-        <a href="#recovery">Recovery</a>
-        <a href="#debug">Debug</a>
-        <a href="#avb">AVB</a>
-        <a href="#logs">Logs</a>
-        <a href="#notes">Notes</a>
-        <a href="#samples">Samples</a>
-        <a href="#community">Community</a>
-      </nav>
-    </header>
-    <div class="cards">
-      <section class="card" id="setup">
-        <h2>Setup & Pre-Requisites</h2>
-        <ul>
-          <li>Linux (Ubuntu 20.04+), basic terminal &amp; Git skills</li>
-          <li>CPU: 4+ cores, RAM: 8GB+, SSD: 250GB+</li>
-          <li>Device, kernel, vendor trees for your target</li>
-        </ul>
-        <div class="chips">
-          <span class="chip"><a href="https://github.com/rajdeep-3305/android-porting-guide/blob/main/guide/01-what-you-need.md" target="_blank">Guide</a></span>
-        </div>
-      </section>
-      <section class="card" id="gsi">
-        <h2>Porting GSIs</h2>
-        <ol>
-          <li>Unlock your device's bootloader</li>
-          <li>Find and flash a suitable GSI</li>
-          <li>Troubleshoot boot, fix device bugs</li>
-        </ol>
-        <div class="chips">
-          <span class="chip"><a href="https://github.com/rajdeep-3305/android-porting-guide/blob/main/guide/19-porting-gsi.md" target="_blank">How-to</a></span>
-        </div>
-      </section>
-      <section class="card" id="recovery">
-        <h2>Recovery Porting</h2>
-        <ul>
-          <li>Obtain TWRP/OrangeFox sources</li>
-          <li>Set up environment, compile, test</li>
-        </ul>
-        <div class="chips">
-          <span class="chip"><a href="https://github.com/rajdeep-3305/android-porting-guide/blob/main/guide/09-port-recovery.md" target="_blank">Recovery Guide</a></span>
-        </div>
-      </section>
-      <section class="card" id="debug">
-        <h2>Debugging Recovery</h2>
-        <ul>
-          <li>Collect recovery logs (logcat, dmesg)</li>
-          <li>Identify issues, apply device fixes</li>
-        </ul>
-        <div class="chips">
-          <span class="chip"><a href="https://github.com/rajdeep-3305/android-porting-guide/blob/main/guide/21-debugging-recovery.md" target="_blank">Debugging</a></span>
-        </div>
-      </section>
-      <section class="card" id="avb">
-        <h2>AVB / Permissive Fixes</h2>
-        <ul>
-          <li>Patch AVB as needed</li>
-          <li>Set SELinux permissive if required</li>
-        </ul>
-        <div class="chips">
-          <span class="chip"><a href="https://github.com/rajdeep-3305/android-porting-guide/blob/main/guide/26-permission-sepolicy-fix.md" target="_blank">AVB Guide</a></span>
-        </div>
-      </section>
-      <section class="card" id="logs">
-        <h2>Logs & Debugging</h2>
-        <ul>
-          <li>
-            Check sample debug logs and port flows.
-            <span class="external"><a href="https://github.com/rajdeep-3305/android-porting-guide/tree/main/logs" target="_blank">/logs/</a></span>
-          </li>
-        </ul>
-      </section>
-      <section class="card" id="notes">
-        <h2>Notes & Extra Tips</h2>
-        <ul>
-          <li>Device-specific tweaks, community notes</li>
-          <li>See undocumented quirks from contributors</li>
-        </ul>
-        <div class="chips">
-          <span class="chip"><a href="https://github.com/rajdeep-3305/android-porting-guide/tree/main/notes" target="_blank">Notes</a></span>
-        </div>
-      </section>
-      <section class="card" id="samples">
-        <h2>Sample Ports</h2>
-        <ul>
-          <li>Explore public device ports &amp; configs</li>
-        </ul>
-        <div class="chips">
-          <span class="chip"><a href="https://github.com/rajdeep-3305/android-porting-guide/tree/main/samples" target="_blank">Samples</a></span>
-        </div>
-      </section>
-      <section class="card" id="community">
-        <h2>Community & Contribution</h2>
-        <ul>
-          <li><a href="https://t.me/android_porting" target="_blank">Android Porting Telegram</a></li>
-          <li>Report issues, ask questions, or PR via <a href="https://github.com/rajdeep-3305/android-porting-guide/issues" target="_blank">GitHub Issues</a>
-          </li>
-          <li>See <a href="https://github.com/rajdeep-3305/android-porting-guide/blob/main/.github/CONTRIBUTING.md" target="_blank">Contribution Guide</a></li>
-        </ul>
-      </section>
+      <div class="side-title">Android<br>Porting Guides</div>
+      <hr class="side-divider">
     </div>
-    <footer>
-      &copy; 2025 Rajdeep · Based on the community Android Porting Guide.<br>
+    <div class="nav-list" id="navList">
+      <!-- Nav items populated by JS -->
+    </div>
+  </nav>
+  <!-- Main content -->
+  <main class="main-content">
+    <h1 class="content-header">Android Porting Guide</h1>
+    <div class="content-desc">
+      A professional, minimal, and fully responsive guide portal.<br>
+      Select a section from the sidebar or scroll the guide cards below.
+    </div>
+    <div class="content-cards" id="cardGrid">
+      <!-- Cards populated by JS -->
+    </div>
+    <footer style="width:100%;margin-top:55px;">
+      &copy; 2025 Rajdeep &middot; Based on the community Android Porting Guide. <br>
       <a href="https://github.com/rajdeep-3305/android-porting-guide" target="_blank">GitHub Source</a>
     </footer>
-  </div>
+  </main>
+  <script>
+    // 31 guide names, descriptions & URLs (edit to keep current)
+    const guides = [
+      ["What You Need","Environment, hardware & skills you’ll require.","01-what-you-need.md"],
+      ["Obtaining Device Trees","Get device, kernel, and vendor sources.","02-get-device-tree.md"],
+      ["Repo & Source Sync","Repo utility, manifest sync, source prep.","03-repo-and-sync.md"],
+      ["Cloning/Changing Trees","Download and update repos.","04-how-to-clone.md"],
+      ["Device Tree Structure","Explain folder & file layout.","05-tree-structure.md"],
+      ["Init & Boot Basics","Android boot/init process overview.","06-init-boot.md"],
+      ["Building a ROM","Lunch, envsetup, full build flow.","07-building-rom.md"],
+      ["Flashing ROMs","How to flash using recovery/Fastboot.","08-flash-roms.md"],
+      ["Port Recovery","Building and porting TWRP etc.","09-port-recovery.md"],
+      ["Recovery Features","TWRP, OrangeFox, Core features/fixes.","10-recovery-features.md"],
+      ["Recovery Compilation","End-to-end TWRP build, errors.","11-compile-recovery.md"],
+      ["Patch Boot/Reboots","Fix stuck boot, kernel panics.","12-fix-boot.md"],
+      ["Fix VNDK","VNDK layer problems & solutions.","13-fix-vndk.md"],
+      ["Kernel Compilation","Build/pick custom kernels.","14-custom-kernel.md"],
+      ["Boot.img Editing","Direct boot image patching.","15-edit-bootimg.md"],
+      ["Magisk & Mods","Root, Magisk, and related mods.","16-magisk-root.md"],
+      ["Vendor Partition","Upgrade/prep vendor partition.","17-vendor-partition.md"],
+      ["SEPolicy","SELinux fixes and policies.","18-sepolicy.md"],
+      ["GSI Porting","Portable Generic System Images.","19-porting-gsi.md"],
+      ["Treble Devices","Understanding Treble structure.","20-treble.md"],
+      ["Debugging Recovery","Collect logs, fix recovery boot.","21-debugging-recovery.md"],
+      ["System Patching","OTA, systemless or in-place patch.","22-system-patch.md"],
+      ["Bootloop Fixes","Diagnosing and fixing bootloops.","23-bootloop-fix.md"],
+      ["Logcat/Debug Tools","Using logcat, dmesg, last_kmsg.","24-logs-and-tools.md"],
+      ["Encryption","Decrypt/encrypt partitions, TWRP tips.","25-encryption.md"],
+      ["Perm/SEPolicy Fix","Permission troubles & policy edits.","26-permission-sepolicy-fix.md"],
+      ["Partition Tables","Understanding custom partitioning.","27-partition-table.md"],
+      ["Recovery-Specific Issues","Common recovery errors, device quirks.","28-recovery-issues.md"],
+      ["OTA/Updates","Building compatible updates.","29-ota-update.md"],
+      ["Advanced Tips","Power user tweaks & tricks.","30-advanced-tips.md"],
+      ["Contributing","How to contribute, open PR, join community.","31-contributing.md"]
+    ];
+    // URLs base
+    const base = "https://github.com/rajdeep-3305/android-porting-guide/blob/main/guide/";
+
+    // Populate sidebar nav
+    const navList = document.getElementById('navList');
+    guides.forEach((g, i)=>{
+      const a = document.createElement('a');
+      a.className = 'nav-link';
+      a.href = base+g[2];
+      a.target = "_blank";
+      a.innerHTML = `<span class="nav-num">${(i+1).toString().padStart(2,'0')}</span> <span class="link-label">${g[0]}</span>`;
+      navList.appendChild(a);
+    });
+    // Populate main content cards
+    const grid = document.getElementById('cardGrid');
+    guides.forEach((g, i)=>{
+      const card = document.createElement('section');
+      card.className = 'guide-card';
+      card.tabIndex = 0;
+      card.innerHTML =
+        `<div class="guide-title">${(i+1).toString().padStart(2,'0')}. ${g[0]}</div>
+         <div class="guide-desc">${g[1]}</div>
+         <a class="guide-link" href="${base+g[2]}" target="_blank">Read Guide →</a>`;
+      grid.appendChild(card);
+    });
+    // Sidebar toggle for mobile/desktop
+    const sidebar = document.getElementById('sidebar'); 
+    const btn = document.getElementById('sidebarToggle');
+    let sideOpen = window.innerWidth > 650;
+    const openSidebar = (on) =>{
+      sidebar.classList.toggle('closed',!on);
+      btn.setAttribute('aria-expanded',on);
+      btn.innerHTML = on ? '✕' : '&#9776;';
+      sideOpen = on;
+    };
+    btn.onclick = ()=>openSidebar(!sideOpen);
+    function autoToggleSidebar(){
+      openSidebar(window.innerWidth > 650);
+    }
+    window.addEventListener('resize', autoToggleSidebar);
+    autoToggleSidebar();
+  </script>
 </body>
 </html>
